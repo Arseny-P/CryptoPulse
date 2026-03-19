@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router';
 import useConfigStore from '../stores/useConfigStore'
 
 const Header = () => {
@@ -12,6 +13,8 @@ const Header = () => {
         <button onClick={switchTheme}>{darkTheme ? "Темно" : "Светло"}</button>
         <button disabled={currency == "usd"} onClick={switchCurrency}>USD</button>
         <button disabled={currency == "eur"} onClick={switchCurrency}>EUR</button>
+        <NavLink to="/main">Main</NavLink>
+        <NavLink to="/favorite">FAvorites</NavLink>
     </div>
   )
 }

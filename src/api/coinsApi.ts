@@ -1,5 +1,6 @@
 import { api } from "./api";
 import { type Coin } from "../types/coin";
+import type { CoinDetail } from "../types/coinDetail";
 
 
 export const coinsApi = {
@@ -15,7 +16,19 @@ export const coinsApi = {
             },
         });
         return data;
+    },
+
+    getCoinDetail: async (id: string): Promise<CoinDetail> => {
+        const { data } = await api.get<CoinDetail>(`/coins/${id}`, {
+            params: {
+                localization: false,
+                tickers: true,
+                market_data: true,
+                community_data: true,
+                developer_data: true,
+                sparkline: true,
+            },
+        });
+        return data;
     }
 };
-
-// далее здесь можно будет писать образение к сервису для получения информации по одной монете или подробную информацию о разменах и тд.

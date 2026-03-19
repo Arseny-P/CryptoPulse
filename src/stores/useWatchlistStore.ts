@@ -11,7 +11,7 @@ const useWatchlistStore = create<watchlistStore>()(
     persist(
         (set) => ({
             favorites: [],
-            addFavorite: (coin: string) => set((state) => ({favorites: [...state.favorites, coin]})),
+            addFavorite: (coin: string) => set((state) => ({favorites: state.favorites.includes(coin) ? state.favorites : [...state.favorites, coin]})),
             deleteFavorite: (coin: string) => set((state) => ({favorites: state.favorites.filter((obj) => obj != coin)})),
         }),
         {name: "watch-store"}
