@@ -11,14 +11,39 @@ import {
   Link as ChakraLink, 
   Flex,
   Avatar,
-  HStack
+  HStack,
+  Center,
+  Spinner,
+  Alert
 } from "@chakra-ui/react";
 
 const CoinsTable = ({ currency }: { currency: string }) => {
-  const { data: coinsList } = useCoinsList(currency);
+  const { data: coinsList, isPending, isError, error } = useCoinsList(currency);
   const addFavorite = useWatchlistStore(state => state.addFavorite);
   const deleteFavorite = useWatchlistStore(state => state.deleteFavorite);
   const favoritesID = useWatchlistStore(state => state.favorites);
+
+  if (isPending) {
+    return (
+      <Center py="20">
+        <Spinner size="xl" color="blue.500" />
+      </Center>
+    );
+  }
+
+  if(isError) {
+    return (
+      <Alert.Root status="error">
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Title>Error</Alert.Title>
+          <Alert.Description>
+            {error.message}
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
+    )
+  }
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">

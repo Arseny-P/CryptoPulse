@@ -6,7 +6,8 @@ const Chart = ({ data }: { data: number[] }) => {
   return (
     <ResponsiveContainer width="100%" height={100}>
       <LineChart data={formattedData}>
-        <YAxis domain={["auto", "auto"]} hide /> 
+        <YAxis domain={["auto", "auto"]} hide />
+         
         <Line 
             type="monotone" 
             dataKey="p" 

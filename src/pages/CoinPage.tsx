@@ -9,7 +9,10 @@ import {
   Text, 
   Image,
   Flex, 
-  Link as ChakraLink 
+  Link as ChakraLink,
+  Center,
+  Spinner,
+  Alert
 } from "@chakra-ui/react";
 
 const CoinPage = () => {
@@ -17,7 +20,29 @@ const CoinPage = () => {
   const { id } = useParams();
 
   const currency = useConfigStore(state => state.currency);
-  const { data: details } = useCoinDetail(id!);
+  const { data: details, isPending, isError, error } = useCoinDetail(id!);
+
+  if (isPending) {
+    return (
+      <Center py="20">
+        <Spinner size="xl" color="blue.500" />
+      </Center>
+    );
+  }
+
+  if(isError) {
+    return (
+      <Alert.Root status="error">
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Title>Error</Alert.Title>
+          <Alert.Description>
+            {error.message}
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
+    )
+  }
 
   return (
     <Container maxW="800px" py="8">

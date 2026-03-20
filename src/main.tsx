@@ -8,6 +8,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import MainPage from './pages/MainPage.tsx'
 import FavoritesPage from './pages/FavoritesPage.tsx'
 import CoinPage from './pages/CoinPage.tsx'
+import NotFoundPage from "./pages/NotFoundPage.tsx"
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="main" element={<MainPage />} />
               <Route path="favorite" element={<FavoritesPage />} />
               <Route path="coin/:id" element={<CoinPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

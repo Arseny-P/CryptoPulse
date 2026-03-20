@@ -16,23 +16,38 @@ import {
   Center,
   Spinner,
   HStack,
-  Avatar
+  Avatar,
+  Alert
 } from "@chakra-ui/react";
 
 const FavoritesPage = () => {
   const currency = useConfigStore(state => state.currency);
   const favoritesID = useWatchlistStore(state => state.favorites);
   const deleteFavorite = useWatchlistStore(state => state.deleteFavorite);
-  const { data: coins, isLoading } = useCoinsList(currency);
+  const { data: coins, isPending, isError, error } = useCoinsList(currency);
 
   const filteredFavorites = coins?.filter(item => favoritesID.includes(item.id));
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Center py="20">
         <Spinner size="xl" color="blue.500" />
       </Center>
     );
+  }
+
+  if(isError) {
+    return (
+      <Alert.Root status="error">
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Title>Error</Alert.Title>
+          <Alert.Description>
+            {error.message}
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
+    )
   }
 
   return (
