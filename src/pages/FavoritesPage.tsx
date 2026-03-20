@@ -1,9 +1,23 @@
-import useWatchlistStore from "../stores/useWatchlistStore"
+import useWatchlistStore from "../stores/useWatchlistStore";
 import type { Coin } from "../types/coin";
 import { useCoinsList } from "../hooks/useCoinsList";
 import useConfigStore from "../stores/useConfigStore";
 import { NavLink } from "react-router";
-import Chart from "../components/ui/Chart";
+import Chart from "../components/Chart";
+import { 
+  Container, 
+  Heading, 
+  SimpleGrid, 
+  Box, 
+  Text, 
+  Button, 
+  Link as ChakraLink, 
+  Flex,
+  Center,
+  Spinner,
+  HStack,
+  Avatar
+} from "@chakra-ui/react";
 
 const FavoritesPage = () => {
   const currency = useConfigStore(state => state.currency);
@@ -11,35 +25,74 @@ const FavoritesPage = () => {
   const deleteFavorite = useWatchlistStore(state => state.deleteFavorite);
   const { data: coins, isLoading } = useCoinsList(currency);
 
-  const filteredFavorites = coins?.filter(item => favoritesID.includes(item.id))
+  const filteredFavorites = coins?.filter(item => favoritesID.includes(item.id));
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <Center py="20">
+        <Spinner size="xl" color="blue.500" />
+      </Center>
+    );
   }
 
   return (
-    <div>
-      <h1>Your Favorites</h1>
+    <Container maxW="1200px" py="8">
+      <Heading size="xl" mb="8">Your Favorites</Heading>
+      
       {!filteredFavorites || filteredFavorites.length === 0 ? (
-        <p>Your haven't favorite coins yet</p>
+        <Text color="fg.muted" fontSize="lg">You haven't added any favorite coins yet.</Text>
       ) : (
-        <div className="favorites-grid">
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
           {filteredFavorites.map((c: Coin) => (
-            <div key={c.id} className="coin-card">
-              <NavLink to={"/coin/" + c.id}><h1 className="coin-card__title">{c.name}</h1></NavLink>
-              <p className="coin-card__price">{c.current_price} {currency.toUpperCase()}</p>
-              <button className="coin-card__button" onClick={() => deleteFavorite(c.id)}>Remove</button>
+            <Box 
+              key={c.id} 
+              borderWidth="1px" 
+              borderColor="border.subtle" 
+              borderRadius="lg" 
+              p="6" 
+              shadow="sm" 
+              bg="bg.panel"
+            >
+              <Flex justify="space-between" align="center" mb="4">
+                <HStack gap="4">
+                  <Avatar.Root size="sm">
+                    <Avatar.Fallback name="Coin icon"/>
+                    <Avatar.Image src={c.image} />
+                  </Avatar.Root>
+                  <ChakraLink asChild _hover={{ textDecoration: "none" }}>
+                    <NavLink to={"/coin/" + c.id}>
+                      <Heading size="md" _hover={{ color: "blue.500" }} transition="color 0.2s">
+                        {c.name}
+                      </Heading>
+                    </NavLink>
+                  </ChakraLink>
+                </HStack>
+                <Text fontWeight="bold" fontSize="lg">
+                  {c.current_price} {currency.toUpperCase()}
+                </Text>
+              </Flex>
 
-              {
-                  c.sparkline_in_7d?.price &&
+              {c.sparkline_in_7d?.price && (
+                <Box mb="4">
                   <Chart data={c.sparkline_in_7d?.price} />
-                }
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
+                </Box>
+              )}
 
-export default FavoritesPage
+              <Button 
+                w="full"
+                size="sm" 
+                variant="outline"
+                colorPalette="red"
+                onClick={() => deleteFavorite(c.id)}
+              >
+                Remove
+              </Button>
+            </Box>
+          ))}
+        </SimpleGrid>
+      )}
+    </Container>
+  );
+};
+
+export default FavoritesPage;

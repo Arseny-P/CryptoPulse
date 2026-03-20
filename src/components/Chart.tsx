@@ -4,7 +4,7 @@ const Chart = ({ data }: { data: number[] }) => {
   const formattedData = data.map((p) => ({ p }));
 
   return (
-    <ResponsiveContainer width="50%" height={100}>
+    <ResponsiveContainer width="100%" height={100}>
       <LineChart data={formattedData}>
         <YAxis domain={["auto", "auto"]} hide /> 
         <Line 
